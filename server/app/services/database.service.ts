@@ -20,9 +20,11 @@ export class DatabaseService {
   public pool: pg.Pool = new pg.Pool(this.connectionConfig);
 
   // ======= DEBUG =======
-  public async getAllFromTable(tableName: string): Promise<pg.QueryResult> {
+  public async getAllFromTable(
+    tableNomCommun: string
+  ): Promise<pg.QueryResult> {
     const client = await this.pool.connect();
-    const res = await client.query(`SELECT * FROM HOTELDB.${tableName};`);
+    const res = await client.query(`SELECT * FROM HOTELDB.${tableNomCommun};`);
     client.release();
     return res;
   }
@@ -31,10 +33,14 @@ export class DatabaseService {
   public async createEspece(espece: Espece): Promise<pg.QueryResult> {
     const client = await this.pool.connect();
 
-    if (!espece.especenb || !espece.name || !espece.city)
+    if (!espece.nomScientifique || !espece.nomCommun || !espece.status)
       throw new Error("Invalid create espece values");
 
-    const values: string[] = [espece.especenb, espece.name, espece.city];
+    const values: string[] = [
+      espece.nomScientifique,
+      espece.nomCommun,
+      espece.status,
+    ];
     const queryText: string = `INSERT INTO HOTELDB.Espece VALUES($1, $2, $3);`;
 
     const res = await client.query(queryText, values);
@@ -44,16 +50,18 @@ export class DatabaseService {
 
   // get especes that correspond to certain caracteristics
   public async filterEspeces(
-    especeNb: string,
-    especeName: string,
-    city: string
+    nomScientifique: string,
+    especeNomCommun: string,
+    status: string
   ): Promise<pg.QueryResult> {
     const client = await this.pool.connect();
 
     const searchTerms: string[] = [];
-    if (especeNb.length > 0) searchTerms.push(`especeNb = '${especeNb}'`);
-    if (especeName.length > 0) searchTerms.push(`name = '${especeName}'`);
-    if (city.length > 0) searchTerms.push(`city = '${city}'`);
+    if (nomScientifique.length > 0)
+      searchTerms.push(`nomScientifique = '${nomScientifique}'`);
+    if (especeNomCommun.length > 0)
+      searchTerms.push(`nomCommun = '${especeNomCommun}'`);
+    if (status.length > 0) searchTerms.push(`status = '${status}'`);
 
     let queryText = "SELECT * FROM HOTELDB.Espece";
     if (searchTerms.length > 0)
@@ -65,45 +73,47 @@ export class DatabaseService {
     return res;
   }
 
-  // get the espece names and numbers so so that the user can only select an existing espece
-  public async getEspeceNamesByNos(): Promise<pg.QueryResult> {
+  // get the espece nomCommuns and numbers so so that the user can only select an existing espece
+  public async getEspeceNomCommunsByNos(): Promise<pg.QueryResult> {
     const client = await this.pool.connect();
     const res = await client.query(
-      "SELECT especeNb, name FROM HOTELDB.Espece;"
+      "SELECT nomScientifique, nomCommun FROM HOTELDB.Espece;"
     );
     client.release();
     return res;
   }
 
-  // modify name or city of a espece
+  // modify nomCommun or status of a espece
   public async updateEspece(espece: Espece): Promise<pg.QueryResult> {
     const client = await this.pool.connect();
 
     let toUpdateValues = [];
 
-    if (espece.name.length > 0) toUpdateValues.push(`name = '${espece.name}'`);
-    if (espece.city.length > 0) toUpdateValues.push(`city = '${espece.city}'`);
+    if (espece.nomCommun.length > 0)
+      toUpdateValues.push(`nomCommun = '${espece.nomCommun}'`);
+    if (espece.status.length > 0)
+      toUpdateValues.push(`status = '${espece.status}'`);
 
     if (
-      !espece.especenb ||
-      espece.especenb.length === 0 ||
+      !espece.nomScientifique ||
+      espece.nomScientifique.length === 0 ||
       toUpdateValues.length === 0
     )
       throw new Error("Invalid espece update query");
 
     const query = `UPDATE HOTELDB.Espece SET ${toUpdateValues.join(
       ", "
-    )} WHERE especeNb = '${espece.especenb}';`;
+    )} WHERE nomScientifique = '${espece.nomScientifique}';`;
     const res = await client.query(query);
     client.release();
     return res;
   }
 
-  public async deleteEspece(especeNb: string): Promise<pg.QueryResult> {
-    if (especeNb.length === 0) throw new Error("Invalid delete query");
+  public async deleteEspece(nomScientifique: string): Promise<pg.QueryResult> {
+    if (nomScientifique.length === 0) throw new Error("Invalid delete query");
 
     const client = await this.pool.connect();
-    const query = `DELETE FROM HOTELDB.Espece WHERE especeNb = '${especeNb}';`;
+    const query = `DELETE FROM HOTELDB.Espece WHERE nomScientifique = '${nomScientifique}';`;
 
     const res = await client.query(query);
     client.release();
@@ -114,12 +124,12 @@ export class DatabaseService {
   public async createRoom(room: Room): Promise<pg.QueryResult> {
     const client = await this.pool.connect();
 
-    if (!room.roomnb || !room.especenb || !room.type || !room.price)
+    if (!room.roomnb || !room.nomScientifique || !room.type || !room.price)
       throw new Error("Invalid create room values");
 
     const values: string[] = [
       room.roomnb,
-      room.especenb,
+      room.nomScientifique,
       room.type,
       room.price.toString(),
     ];
@@ -131,20 +141,21 @@ export class DatabaseService {
   }
 
   public async filterRooms(
-    especeNb: string,
+    nomScientifique: string,
     roomNb: string = "",
     roomType: string = "",
     price: number = -1
   ): Promise<pg.QueryResult> {
     const client = await this.pool.connect();
 
-    if (!especeNb || especeNb.length === 0)
+    if (!nomScientifique || nomScientifique.length === 0)
       throw new Error("Invalid filterRooms request");
 
     let searchTerms = [];
-    searchTerms.push(`especeNb = '${especeNb}'`);
+    searchTerms.push(`nomScientifique = '${nomScientifique}'`);
 
-    if (roomNb.length > 0) searchTerms.push(`especeNb = '${especeNb}'`);
+    if (roomNb.length > 0)
+      searchTerms.push(`nomScientifique = '${nomScientifique}'`);
     if (roomType.length > 0) searchTerms.push(`type = '${roomType}'`);
     if (price >= 0) searchTerms.push(`price = ${price}`);
 
@@ -164,8 +175,8 @@ export class DatabaseService {
     if (room.type.length > 0) toUpdateValues.push(`type = '${room.type}'`);
 
     if (
-      !room.especenb ||
-      room.especenb.length === 0 ||
+      !room.nomScientifique ||
+      room.nomScientifique.length === 0 ||
       !room.roomnb ||
       room.roomnb.length === 0 ||
       toUpdateValues.length === 0
@@ -174,20 +185,23 @@ export class DatabaseService {
 
     const query = `UPDATE HOTELDB.Room SET ${toUpdateValues.join(
       ", "
-    )} WHERE especeNb = '${room.especenb}' AND roomNb = '${room.roomnb}';`;
+    )} WHERE nomScientifique = '${room.nomScientifique}' AND roomNb = '${
+      room.roomnb
+    }';`;
     const res = await client.query(query);
     client.release();
     return res;
   }
 
   public async deleteRoom(
-    especeNb: string,
+    nomScientifique: string,
     roomNb: string
   ): Promise<pg.QueryResult> {
-    if (especeNb.length === 0) throw new Error("Invalid room delete query");
+    if (nomScientifique.length === 0)
+      throw new Error("Invalid room delete query");
     const client = await this.pool.connect();
 
-    const query = `DELETE FROM HOTELDB.Room WHERE especeNb = '${especeNb}' AND roomNb = '${roomNb}';`;
+    const query = `DELETE FROM HOTELDB.Room WHERE nomScientifique = '${nomScientifique}' AND roomNb = '${roomNb}';`;
     const res = await client.query(query);
     client.release();
     return res;
@@ -199,9 +213,9 @@ export class DatabaseService {
     if (
       !guest.guestnb ||
       !guest.nas ||
-      !guest.name ||
+      !guest.nomCommun ||
       !guest.gender ||
-      !guest.city
+      !guest.status
     )
       throw new Error("Invalid create room values");
 
@@ -211,9 +225,9 @@ export class DatabaseService {
     const values: string[] = [
       guest.guestnb,
       guest.nas,
-      guest.name,
+      guest.nomCommun,
       guest.gender,
-      guest.city,
+      guest.status,
     ];
     const queryText: string = `INSERT INTO HOTELDB.Guest VALUES($1, $2, $3, $4, $5);`;
     const res = await client.query(queryText, values);
@@ -222,15 +236,15 @@ export class DatabaseService {
   }
 
   public async getGuests(
-    especeNb: string,
+    nomScientifique: string,
     roomNb: string
   ): Promise<pg.QueryResult> {
-    if (!especeNb || especeNb.length === 0)
+    if (!nomScientifique || nomScientifique.length === 0)
       throw new Error("Invalid guest espece no");
 
     const client = await this.pool.connect();
     const queryExtension = roomNb ? ` AND b.roomNb = '${roomNb}'` : "";
-    const query: string = `SELECT * FROM HOTELDB.Guest g JOIN HOTELDB.Booking b ON b.guestNb = g.guestNb WHERE b.especeNb = '${especeNb}'${queryExtension};`;
+    const query: string = `SELECT * FROM HOTELDB.Guest g JOIN HOTELDB.Booking b ON b.guestNb = g.guestNb WHERE b.nomScientifique = '${nomScientifique}'${queryExtension};`;
 
     const res = await client.query(query);
     client.release();
@@ -239,7 +253,7 @@ export class DatabaseService {
 
   // ======= BOOKING =======
   public async createBooking(
-    especeNb: string,
+    nomScientifique: string,
     guestNo: string,
     dateFrom: Date,
     dateTo: Date,
@@ -247,7 +261,7 @@ export class DatabaseService {
   ): Promise<pg.QueryResult> {
     const client = await this.pool.connect();
     const values: string[] = [
-      especeNb,
+      nomScientifique,
       guestNo,
       dateFrom.toString(),
       dateTo.toString(),

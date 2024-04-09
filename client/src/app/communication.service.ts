@@ -39,15 +39,15 @@ export class CommunicationService {
       .pipe(catchError(this.handleError<number>("updateEspece")));
   }
 
-  public deleteEspece(especeNb: string): Observable<number> {
+  public deleteEspece(nomScientifique: string): Observable<number> {
     return this.http
-      .post<number>(this.BASE_URL + "/especes/delete/" + especeNb, {})
+      .post<number>(this.BASE_URL + "/especes/delete/" + nomScientifique, {})
       .pipe(catchError(this.handleError<number>("deleteEspece")));
   }
 
   public getEspecePKs(): Observable<EspecePK[]> {
     return this.http
-      .get<EspecePK[]>(this.BASE_URL + "/especes/especeNb")
+      .get<EspecePK[]>(this.BASE_URL + "/especes/nomScientifique")
       .pipe(catchError(this.handleError<EspecePK[]>("getEspecePKs")));
   }
 

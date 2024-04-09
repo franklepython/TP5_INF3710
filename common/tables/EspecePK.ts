@@ -1,4 +1,4 @@
 export interface EspecePK {
-  especenb: string;
-  name: string;
+  nomScientifique: string;
+  nomCommun: string;
 }

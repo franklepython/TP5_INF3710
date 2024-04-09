@@ -1,5 +1,5 @@
 export interface Room {
-  especenb: string;
+  nomScientifique: string;
   roomnb: string;
   type: string;
   price: number;

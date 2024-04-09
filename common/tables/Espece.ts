@@ -1,5 +1,5 @@
 export interface Espece {
-  especenb: string;
-  name: string;
-  city: string;
+  nomScientifique: string;
+  nomCommun: string;
+  status: string;
 }

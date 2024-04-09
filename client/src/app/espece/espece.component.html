@@ -18,20 +18,20 @@
     </thead>
     <tbody>
       <tr *ngFor="let espece of especes; let i = index">
-        <td class="contentCell">{{ espece.especenb }}</td>
+        <td class="contentCell">{{ espece.nomScientifique }}</td>
         <td
           class="contentCell"
           contenteditable="true"
-          (blur)="changeEspeceName($event, i)"
+          (blur)="changeEspeceNomCommun($event, i)"
         >
-          {{ espece.name }}
+          {{ espece.nomCommun }}
         </td>
         <td
           class="contentCell"
           contenteditable="true"
-          (blur)="changeEspeceCity($event, i)"
+          (blur)="changeEspeceStatus($event, i)"
         >
-          {{ espece.city }}
+          {{ espece.status }}
         </td>
         <td class="actionCell">
           <button type="button" class="submitbtn" (click)="updateEspece(i)">
@@ -40,7 +40,7 @@
           <button
             type="button"
             class="deletebtn"
-            (click)="deleteEspece(espece.especenb)"
+            (click)="deleteEspece(espece.nomScientifique)"
           >
             <i class="fa fa-trash-o"></i>
           </button>
@@ -52,25 +52,26 @@
           class="contentCell"
           contenteditable="true"
           placeholder="Nouveau nom sci."
-          #newEspeceNb
+          #newNomScientifique
         ></td>
         <td
           class="contentCell"
           contenteditable="true"
           placeholder="Nouveau nom com."
-          #newEspeceName
+          #newEspeceNomCommun
         ></td>
         <td
           class="contentCell"
           contenteditable="true"
           placeholder="Nouveau status"
-          #newEspeceCity
+          #newEspeceStatus
         ></td>
-        <td class="contentCell"
-        class="contentCell"
-        contenteditable="true"
-        placeholder="Nouveau Prédateur"
-        #newEspecePred
+        <td
+          class="contentCell"
+          class="contentCell"
+          contenteditable="true"
+          placeholder="Nouveau Prédateur"
+          #newEspecePred
         ></td>
       </tr>
     </tbody>

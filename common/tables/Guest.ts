@@ -1,13 +1,13 @@
 export enum Gender {
-    M = 'M',
-    F = 'F',
-    O = 'O'
+  M = "M",
+  F = "F",
+  O = "O",
 }
 
 export interface Guest {
-    guestnb: string;
-    nas: string;
-    name: string;
-    gender: Gender;
-    city: string;
+  guestnb: string;
+  nas: string;
+  nomCommun: string;
+  gender: Gender;
+  status: string;
 }

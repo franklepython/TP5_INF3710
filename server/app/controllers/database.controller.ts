@@ -20,19 +20,21 @@ export class DatabaseController {
     const router: Router = Router();
 
     // ======= HOTEL ROUTES =======
-    // ex http://localhost:3000/database/espece?especeNb=3&name=LeGrandEspece&city=laval
+    // ex http://localhost:3000/database/espece?nomScientifique=3&nomCommun=LeGrandEspece&status=laval
     router.get("/especes", (req: Request, res: Response, _: NextFunction) => {
-      var especeNb = req.params.especeNb ? req.params.especeNb : "";
-      var especeName = req.params.name ? req.params.name : "";
-      var especeCity = req.params.city ? req.params.city : "";
+      var nomScientifique = req.params.nomScientifique
+        ? req.params.nomScientifique
+        : "";
+      var especeNomCommun = req.params.nomCommun ? req.params.nomCommun : "";
+      var especeStatus = req.params.status ? req.params.status : "";
 
       this.databaseService
-        .filterEspeces(especeNb, especeName, especeCity)
+        .filterEspeces(nomScientifique, especeNomCommun, especeStatus)
         .then((result: pg.QueryResult) => {
           const especes: Espece[] = result.rows.map((espece: Espece) => ({
-            especenb: espece.especenb,
-            name: espece.name,
-            city: espece.city,
+            nomScientifique: espece.nomScientifique,
+            nomCommun: espece.nomCommun,
+            status: espece.status,
           }));
           res.json(especes);
         })
@@ -42,16 +44,18 @@ export class DatabaseController {
     });
 
     router.get(
-      "/especes/especeNb",
+      "/especes/nomScientifique",
       (req: Request, res: Response, _: NextFunction) => {
         this.databaseService
-          .getEspeceNamesByNos()
+          .getEspeceNomCommunsByNos()
           .then((result: pg.QueryResult) => {
-            const especesNbsNames = result.rows.map((espece: EspecePK) => ({
-              especenb: espece.especenb,
-              name: espece.name,
-            }));
-            res.json(especesNbsNames);
+            const especesNbsNomCommuns = result.rows.map(
+              (espece: EspecePK) => ({
+                nomScientifique: espece.nomScientifique,
+                nomCommun: espece.nomCommun,
+              })
+            );
+            res.json(especesNbsNomCommuns);
           })
 
           .catch((e: Error) => {
@@ -64,9 +68,9 @@ export class DatabaseController {
       "/especes/insert",
       (req: Request, res: Response, _: NextFunction) => {
         const espece: Espece = {
-          especenb: req.body.especenb,
-          name: req.body.name,
-          city: req.body.city,
+          nomScientifique: req.body.nomScientifique,
+          nomCommun: req.body.nomCommun,
+          status: req.body.status,
         };
 
         this.databaseService
@@ -82,11 +86,11 @@ export class DatabaseController {
     );
 
     router.post(
-      "/especes/delete/:especeNb",
+      "/especes/delete/:nomScientifique",
       (req: Request, res: Response, _: NextFunction) => {
-        const especeNb: string = req.params.especeNb;
+        const nomScientifique: string = req.params.nomScientifique;
         this.databaseService
-          .deleteEspece(especeNb)
+          .deleteEspece(nomScientifique)
           .then((result: pg.QueryResult) => {
             res.json(result.rowCount);
           })
@@ -100,9 +104,9 @@ export class DatabaseController {
       "/especes/update",
       (req: Request, res: Response, _: NextFunction) => {
         const espece: Espece = {
-          especenb: req.body.especenb,
-          name: req.body.name ? req.body.name : "",
-          city: req.body.city ? req.body.city : "",
+          nomScientifique: req.body.nomScientifique,
+          nomCommun: req.body.nomCommun ? req.body.nomCommun : "",
+          status: req.body.status ? req.body.status : "",
         };
 
         this.databaseService
@@ -118,7 +122,9 @@ export class DatabaseController {
 
     // ======= ROOMS ROUTES =======
     router.get("/rooms", (req: Request, res: Response, _: NextFunction) => {
-      const especeNb = req.query.especeNb ? req.query.especeNb : "";
+      const nomScientifique = req.query.nomScientifique
+        ? req.query.nomScientifique
+        : "";
       const roomNb = req.query.roomNb ? req.query.roomNb : "";
       const roomType = req.query.type ? req.query.type : "";
       const roomPrice = req.query.price
@@ -127,14 +133,14 @@ export class DatabaseController {
 
       this.databaseService
         .filterRooms(
-          especeNb as string,
+          nomScientifique as string,
           roomNb as string,
           roomType as string,
           roomPrice
         )
         .then((result: pg.QueryResult) => {
           const rooms: Room[] = result.rows.map((room: Room) => ({
-            especenb: room.especenb,
+            nomScientifique: room.nomScientifique,
             roomnb: room.roomnb,
             type: room.type,
             price: parseFloat(room.price.toString()),
@@ -151,7 +157,7 @@ export class DatabaseController {
       "/rooms/insert",
       (req: Request, res: Response, _: NextFunction) => {
         const room: Room = {
-          especenb: req.body.especenb,
+          nomScientifique: req.body.nomScientifique,
           roomnb: req.body.roomnb,
           type: req.body.type,
           price: parseFloat(req.body.price),
@@ -173,7 +179,7 @@ export class DatabaseController {
       "/rooms/update",
       (req: Request, res: Response, _: NextFunction) => {
         const room: Room = {
-          especenb: req.body.especenb,
+          nomScientifique: req.body.nomScientifique,
           roomnb: req.body.roomnb,
           type: req.body.type,
           price: parseFloat(req.body.price),
@@ -192,13 +198,13 @@ export class DatabaseController {
     );
 
     router.post(
-      "/rooms/delete/:especeNb/:roomNb",
+      "/rooms/delete/:nomScientifique/:roomNb",
       (req: Request, res: Response, _: NextFunction) => {
-        const especeNb: string = req.params.especeNb;
+        const nomScientifique: string = req.params.nomScientifique;
         const roomNb: string = req.params.roomNb;
 
         this.databaseService
-          .deleteRoom(especeNb, roomNb)
+          .deleteRoom(nomScientifique, roomNb)
           .then((result: pg.QueryResult) => {
             res.json(result.rowCount);
           })
@@ -216,9 +222,9 @@ export class DatabaseController {
         const guest: Guest = {
           guestnb: req.body.guestnb,
           nas: req.body.nas,
-          name: req.body.name,
+          nomCommun: req.body.nomCommun,
           gender: req.body.gender,
-          city: req.body.city,
+          status: req.body.status,
         };
 
         this.databaseService
@@ -234,20 +240,20 @@ export class DatabaseController {
     );
 
     router.get(
-      "/guests/:especeNb/:roomNb",
+      "/guests/:nomScientifique/:roomNb",
       (req: Request, res: Response, _: NextFunction) => {
-        const especeNb: string = req.params.especeNb;
+        const nomScientifique: string = req.params.nomScientifique;
         const roomNb: string = req.params.roomNb;
 
         this.databaseService
-          .getGuests(especeNb, roomNb)
+          .getGuests(nomScientifique, roomNb)
           .then((result: pg.QueryResult) => {
             const guests: Guest[] = result.rows.map((guest: any) => ({
               guestnb: guest.guestnb,
               nas: guest.nas,
-              name: guest.name,
+              nomCommun: guest.nomCommun,
               gender: guest.gender,
-              city: guest.city,
+              status: guest.status,
             }));
             res.json(guests);
           })
@@ -260,10 +266,10 @@ export class DatabaseController {
 
     // ======= GENERAL ROUTES =======
     router.get(
-      "/tables/:tableName",
+      "/tables/:tableNomCommun",
       (req: Request, res: Response, next: NextFunction) => {
         this.databaseService
-          .getAllFromTable(req.params.tableName)
+          .getAllFromTable(req.params.tableNomCommun)
           .then((result: pg.QueryResult) => {
             res.json(result.rows);
           })

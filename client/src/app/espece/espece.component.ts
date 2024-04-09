@@ -8,9 +8,9 @@ import { CommunicationService } from "../communication.service";
   styleUrls: ["./espece.component.css"],
 })
 export class EspeceComponent {
-  @ViewChild("newEspeceNb") newEspeceNb: ElementRef;
-  @ViewChild("newEspeceName") newEspeceName: ElementRef;
-  @ViewChild("newEspeceCity") newEspeceCity: ElementRef;
+  @ViewChild("newNomScientifique") newNomScientifique: ElementRef;
+  @ViewChild("newEspeceNomCommun") newEspeceNomCommun: ElementRef;
+  @ViewChild("newEspeceStatus") newEspeceStatus: ElementRef;
 
   public especes: Espece[] = [];
   public duplicateError: boolean = false;
@@ -29,9 +29,9 @@ export class EspeceComponent {
 
   public insertEspece(): void {
     const espece: any = {
-      especenb: this.newEspeceNb.nativeElement.innerText,
-      name: this.newEspeceName.nativeElement.innerText,
-      city: this.newEspeceCity.nativeElement.innerText,
+      nomScientifique: this.newNomScientifique.nativeElement.innerText,
+      nomCommun: this.newEspeceNomCommun.nativeElement.innerText,
+      status: this.newEspeceStatus.nativeElement.innerText,
     };
 
     this.communicationService.insertEspece(espece).subscribe((res: number) => {
@@ -45,25 +45,27 @@ export class EspeceComponent {
 
   private refresh() {
     this.getEspeces();
-    this.newEspeceNb.nativeElement.innerText = "";
-    this.newEspeceName.nativeElement.innerText = "";
-    this.newEspeceCity.nativeElement.innerText = "";
+    this.newNomScientifique.nativeElement.innerText = "";
+    this.newEspeceNomCommun.nativeElement.innerText = "";
+    this.newEspeceStatus.nativeElement.innerText = "";
   }
 
-  public deleteEspece(especeNb: string) {
-    this.communicationService.deleteEspece(especeNb).subscribe((res: any) => {
-      this.refresh();
-    });
+  public deleteEspece(nomScientifique: string) {
+    this.communicationService
+      .deleteEspece(nomScientifique)
+      .subscribe((res: any) => {
+        this.refresh();
+      });
   }
 
-  public changeEspeceName(event: any, i: number) {
+  public changeEspeceNomCommun(event: any, i: number) {
     const editField = event.target.textContent;
-    this.especes[i].name = editField;
+    this.especes[i].nomCommun = editField;
   }
 
-  public changeEspeceCity(event: any, i: number) {
+  public changeEspeceStatus(event: any, i: number) {
     const editField = event.target.textContent;
-    this.especes[i].city = editField;
+    this.especes[i].status = editField;
   }
 
   public updateEspece(i: number) {
