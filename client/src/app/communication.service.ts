@@ -3,8 +3,8 @@ import { Injectable } from "@angular/core";
 // tslint:disable-next-line:ordered-imports
 import { of, Observable, Subject } from "rxjs";
 import { catchError } from "rxjs/operators";
-import { Espece } from "../../../common/tables/Espece";
-import { EspecePK } from "../../../common/tables/EspecePK";
+import { Especeoiseau } from "../../../common/tables/Especeoiseau";
+import { EspeceoiseauPK } from "../../../common/tables/EspeceoiseauPK";
 
 @Injectable()
 export class CommunicationService {
@@ -21,34 +21,36 @@ export class CommunicationService {
     this._listners.next(filterBy);
   }
 
-  public getEspeces(): Observable<Espece[]> {
+  public getEspeceoiseaus(): Observable<Especeoiseau[]> {
     return this.http
-      .get<Espece[]>(this.BASE_URL + "/especes")
-      .pipe(catchError(this.handleError<Espece[]>("getEspeces")));
+      .get<Especeoiseau[]>(this.BASE_URL + "/especeoiseaux")
+      .pipe(catchError(this.handleError<Especeoiseau[]>("getEspeceoiseaus")));
   }
 
-  public insertEspece(espece: Espece): Observable<number> {
+  public insertEspeceoiseau(especeoiseau: Especeoiseau): Observable<number> {
     return this.http
-      .post<number>(this.BASE_URL + "/especes/insert", espece)
-      .pipe(catchError(this.handleError<number>("insertEspece")));
+      .post<number>(this.BASE_URL + "/especeoiseaux/insert", especeoiseau)
+      .pipe(catchError(this.handleError<number>("insertEspeceoiseau")));
   }
 
-  public updateEspece(espece: Espece): Observable<number> {
+  public updateEspeceoiseau(especeoiseau: Especeoiseau): Observable<number> {
     return this.http
-      .put<number>(this.BASE_URL + "/especes/update", espece)
-      .pipe(catchError(this.handleError<number>("updateEspece")));
+      .put<number>(this.BASE_URL + "/especeoiseaux/update", especeoiseau)
+      .pipe(catchError(this.handleError<number>("updateEspeceoiseau")));
   }
 
-  public deleteEspece(nomScientifique: string): Observable<number> {
+  public deleteEspeceoiseau(nomscientifique: string): Observable<number> {
     return this.http
-      .post<number>(this.BASE_URL + "/especes/delete/" + nomScientifique, {})
-      .pipe(catchError(this.handleError<number>("deleteEspece")));
+      .post<number>(this.BASE_URL + "/especeoiseaux/delete/" + nomscientifique, {})
+      .pipe(catchError(this.handleError<number>("deleteEspeceoiseau")));
   }
 
-  public getEspecePKs(): Observable<EspecePK[]> {
+  public getEspeceoiseauPKs(): Observable<EspeceoiseauPK[]> {
     return this.http
-      .get<EspecePK[]>(this.BASE_URL + "/especes/nomScientifique")
-      .pipe(catchError(this.handleError<EspecePK[]>("getEspecePKs")));
+      .get<EspeceoiseauPK[]>(this.BASE_URL + "/especeoiseaux/nomscientifique")
+      .pipe(
+        catchError(this.handleError<EspeceoiseauPK[]>("getEspeceoiseauPKs"))
+      );
   }
 
   private handleError<T>(

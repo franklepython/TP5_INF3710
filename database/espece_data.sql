@@ -35,7 +35,7 @@ INSERT INTO Expertise VALUES
 ('Photographie', 'Les oiseaux rares');
 
 -- Insérer des espèces d'oiseaux
-INSERT INTO Especeoiseau VALUES 
+INSERT INTO Especeoiseauoiseau VALUES 
 ('BrantaCanadensis', 'Bernache du Canada', 'Vulnérable', NULL),
 ('FalcoPeregrinus', 'Faucon pèlerin', 'Préoccupation mineure', NULL),
 ('PasserDomesticus', 'Moineau domestique', 'Non menacée', NULL),

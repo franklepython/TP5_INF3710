@@ -23,6 +23,6 @@ Tutoriel du projet d'INF3710
 ## Demo Screenshots (remove for actual readme)
 
 ![Main Page](./imgs/mainpage.PNG "Welcome Page")
-![Especes Page](./imgs/especes.PNG "Especes Page")
+![Especeoiseaus Page](./imgs/especeoiseaux.PNG "Especeoiseaus Page")
 ![Rooms Page](./imgs/rooms.PNG "Rooms Page")
 ![Guests Page](./imgs/guests.PNG "Guests Page")

@@ -17,7 +17,7 @@ module.exports = function (config) {
       clearContext: false, // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
-      dir: require("path").join(__dirnomCommun, "../coverage"),
+      dir: require("path").join(__dirnomcommun, "../coverage"),
       reports: ["html", "text"],
       fixWebpackSourcePaths: true,
       combineBrowserReports: true,

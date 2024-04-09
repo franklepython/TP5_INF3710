@@ -7,7 +7,7 @@ export enum Gender {
 export interface Guest {
   guestnb: string;
   nas: string;
-  nomCommun: string;
+  nomcommun: string;
   gender: Gender;
-  status: string;
+  statutspeces: string;
 }

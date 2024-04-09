@@ -6,10 +6,10 @@ import { BrowserModule } from "@angular/platform-browser";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { CommunicationService } from "./communication.service";
-import { EspeceComponent } from "./espece/espece.component";
+import { EspeceoiseauComponent } from "./especeoiseau/especeoiseau.component";
 
 @NgModule({
-  declarations: [AppComponent,  EspeceComponent],
+  declarations: [AppComponent, EspeceoiseauComponent],
   imports: [
     CommonModule,
     BrowserModule,

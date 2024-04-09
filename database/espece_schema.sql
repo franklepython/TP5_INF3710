@@ -44,12 +44,12 @@ CREATE TABLE Expertise (
     FOREIGN KEY (nomcommunaute) REFERENCES Communaute(nomcommunaute)
 );
 
-CREATE TABLE Especeoiseau (
+CREATE TABLE Especeoiseauoiseau (
     nomscientifique VARCHAR(255) PRIMARY KEY,
     nomcommun VARCHAR(255),
     statutspeces VARCHAR(255),
     nomscientifiquecomsommer VARCHAR(255), -- nom scientifique du prédateur de l'espèce courante
-    FOREIGN KEY (nomscientifiquecomsommer) REFERENCES Especeoiseau(nomscientifique)
+    FOREIGN KEY (nomscientifiquecomsommer) REFERENCES Especeoiseauoiseau(nomscientifique)
 );
 
 CREATE TABLE Observation (
@@ -61,7 +61,7 @@ CREATE TABLE Observation (
     nomscientifique VARCHAR(255) NOT NULL,
     FOREIGN KEY (idrapport) REFERENCES Rapport(idrapport),
     FOREIGN KEY (idobservateur) REFERENCES Observateur(idobservateur),
-    FOREIGN KEY (nomscientifique) REFERENCES Especeoiseau(nomscientifique)
+    FOREIGN KEY (nomscientifique) REFERENCES Especeoiseauoiseau(nomscientifique)
 );
 
 CREATE TABLE Zonegeographique (
@@ -76,7 +76,7 @@ CREATE TABLE Resider (
     nomzone VARCHAR(255),
     nbindividus INT NOT NULL,
     PRIMARY KEY (nomscientifique, nomzone),
-    FOREIGN KEY (nomscientifique) REFERENCES Especeoiseau(nomscientifique),
+    FOREIGN KEY (nomscientifique) REFERENCES Especeoiseauoiseau(nomscientifique),
     FOREIGN KEY (nomzone) REFERENCES Zonegeographique(nomzone)
 );
 
