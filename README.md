@@ -3,11 +3,12 @@
 Tutoriel du projet d'INF3710
 
 ## Avant de lancer le projet
-- Assurez-vous que Postgres roule sur vos machines 
+
+- Assurez-vous que Postgres roule sur vos machines
 
 - Vérifiez que vous avez NodeJs installé avec `node –v`, si vous ne l'avez pas fait, veuillez suivre les étapes dans les dispos du labo
 
-- Allez dans `/client`  et lancez `npm install`
+- Allez dans `/client` et lancez `npm install`
 
 - Allez dans `/server` et lancez `npm install​`
 
@@ -22,6 +23,6 @@ Tutoriel du projet d'INF3710
 ## Demo Screenshots (remove for actual readme)
 
 ![Main Page](./imgs/mainpage.PNG "Welcome Page")
-![Hotels Page](./imgs/hotels.PNG "Hotels Page")
+![Especes Page](./imgs/especes.PNG "Especes Page")
 ![Rooms Page](./imgs/rooms.PNG "Rooms Page")
 ![Guests Page](./imgs/guests.PNG "Guests Page")

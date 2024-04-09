@@ -1,0 +1,80 @@
+<div id="espece">
+  <h1>Especes</h1>
+
+  <div class="divider"></div>
+
+  <table
+    id="ht"
+    align="center"
+    border="1"
+    width="1000"
+    class="table-striped table-hover"
+  >
+    <thead class="header">
+      <th class="contentCell">Nom Scientifique</th>
+      <th class="contentCell">Nom Commun</th>
+      <th class="contentCell">Status de l'espèce</th>
+      <th class="actionCell">Prédateur</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let espece of especes; let i = index">
+        <td class="contentCell">{{ espece.especenb }}</td>
+        <td
+          class="contentCell"
+          contenteditable="true"
+          (blur)="changeEspeceName($event, i)"
+        >
+          {{ espece.name }}
+        </td>
+        <td
+          class="contentCell"
+          contenteditable="true"
+          (blur)="changeEspeceCity($event, i)"
+        >
+          {{ espece.city }}
+        </td>
+        <td class="actionCell">
+          <button type="button" class="submitbtn" (click)="updateEspece(i)">
+            <i class="fa fa-edit"></i>
+          </button>
+          <button
+            type="button"
+            class="deletebtn"
+            (click)="deleteEspece(espece.especenb)"
+          >
+            <i class="fa fa-trash-o"></i>
+          </button>
+        </td>
+      </tr>
+
+      <tr class="blank_row">
+        <td
+          class="contentCell"
+          contenteditable="true"
+          placeholder="Nouveau nom sci."
+          #newEspeceNb
+        ></td>
+        <td
+          class="contentCell"
+          contenteditable="true"
+          placeholder="Nouveau nom com."
+          #newEspeceName
+        ></td>
+        <td
+          class="contentCell"
+          contenteditable="true"
+          placeholder="Nouveau status"
+          #newEspeceCity
+        ></td>
+        <td class="contentCell"
+        class="contentCell"
+        contenteditable="true"
+        placeholder="Nouveau Prédateur"
+        #newEspecePred
+        ></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button type="button" class="btn" (click)="insertEspece()">+</button>
+</div>

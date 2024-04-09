@@ -1,23 +1,24 @@
 <nav class="navbar navbar-dark bg-dark">
-  <a class="navbar-brand title" href="/">INF3710 - TP5 - Francis Trahan - Maude Racine</a>
+  <a class="navbar-brand title" href="/"
+    >INF3710 - TP5 - Francis Trahan - Maude Racine</a
+  >
   <div class="navbar-expand mr-auto">
     <div class="navbar-nav">
-      <a class="nav-item nav-link active" routerLink="/hotels">Hotels</a>
-      <a class="nav-item nav-link active" routerLink="/rooms">Rooms</a>
-      <a class="nav-item nav-link active" routerLink="/guests">Guests</a>
+      <a class="nav-item nav-link active" routerLink="/especes">Especes</a>
     </div>
   </div>
 </nav>
 
 <div class="home" *ngIf="route == ''">
   <p>
-    Entrez 
-    <br/>
-      pour
-    <br/>
-    <p class="Ornithologie"> découvrir l'ornithologie
-    </p>
-  <button type="button" class="btn" routerLink="/hotels">Entrez 🦆</button>
+    Entrez
+    <br />
+    pour
+    <br />
+  </p>
+
+  <p class="Ornithologie">découvrir l'ornithologie</p>
+  <button type="button" class="btn" routerLink="/especes">Entrez 🦆</button>
 </div>
 
 <router-outlet></router-outlet>
