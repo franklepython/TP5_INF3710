@@ -71,7 +71,7 @@
 .deletebtn {
     border-radius: 4px;
     color: white; 
-    background-color: var(--theme-purple); 
+    background-color: var(--theme-green); 
     border-style: none;
 }
 

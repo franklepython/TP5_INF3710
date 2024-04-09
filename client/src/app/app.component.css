@@ -7,7 +7,7 @@
     margin-top: 20px;
 }
 .title {
-    color: var(--theme-purple);
+    color: var(--theme-green);
     font-family: 'Roboto', sans-serif;
 }
 
@@ -22,23 +22,8 @@
     text-align: center;
 }
 
-.hotel1 {
-    color: var(--theme-purple);
-    font-family: 'Varela Round', sans-serif;
-}
-
-.hotel2 {
-    color: var(--theme-blue);
-    font-family: 'Varela Round', sans-serif;
-}
-
-.hotel3 {
-    color: var(--theme-lightblue);
-    font-family: 'Varela Round', sans-serif;
-}
-
 .btn {
-    background-color: var(--theme-purple);
+    background-color: var(--theme-green);
     font-size: 20px;
     color: white;
     box-shadow: 2px 2px 5px grey ;
