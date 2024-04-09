@@ -1,49 +1,82 @@
-SET search_path = especeDB;
+DROP SCHEMA IF EXISTS ornithologue_bd CASCADE;
 
-DROP SCHEMA IF EXISTS HOTELDB CASCADE;
-CREATE SCHEMA HOTELDB;
+CREATE SCHEMA ornithologue_bd;
+SET search_path = ornithologue_bd;
 
-CREATE TABLE IF NOT EXISTS HOTELDB.Espece (
-    nomScientifique     VARCHAR(10)     NOT NULL,
-    nomCommun        VARCHAR(20)     NOT NULL,
-    status        VARCHAR(50)     NOT NULL,
-    PRIMARY KEY (nomScientifique)
+CREATE TABLE Observateur (
+    idobservateur VARCHAR(10) PRIMARY KEY,
+    nomobservateur VARCHAR(255),
+    contactobservateur VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS HOTELDB.Room(
-    roomNb  VARCHAR(10)     NOT NULL,
-    nomScientifique VARCHAR(10)     NOT NULL,
-    type    VARCHAR(10)     NOT NULL,
-    price   NUMERIC(6,3)    NOT NULL,
-    PRIMARY KEY (roomNb, nomScientifique),
-    FOREIGN KEY(nomScientifique) REFERENCES HOTELDB.Espece(nomScientifique) ON DELETE RESTRICT ON UPDATE CASCADE
+CREATE TABLE Rapport (
+    idrapport VARCHAR(10) PRIMARY KEY,
+    titrerapport VARCHAR(255),
+    contenurapport TEXT,
+    idobservateur VARCHAR(255) NOT NULL,
+    dateredaction DATE NOT NULL,
+    FOREIGN KEY (idobservateur) REFERENCES Observateur(idobservateur)
 );
 
-CREATE DOMAIN HOTELDB.genderType AS CHAR
-    CHECK (VALUE IN ('M', 'F', 'O'));
-
-CREATE TABLE IF NOT EXISTS HOTELDB.Guest(
-    guestNb VARCHAR(10) NOT NULL,
-    nas     VARCHAR(10) UNIQUE NOT NULL,
-    nomCommun    VARCHAR(20) NOT NULL,
-    gender  genderType  DEFAULT 'M',
-    status    VARCHAR(50) NOT NULL,
-    PRIMARY KEY (guestNb)
+CREATE TABLE Communaute (
+    nomcommunaute VARCHAR(255) PRIMARY KEY,
+    descriptioncomm TEXT
 );
 
-CREATE TABLE IF NOT EXISTS HOTELDB.Booking(
-    nomScientifique     VARCHAR(10)     NOT NULL,
-    roomNb      VARCHAR(10)     NOT NULL,
-    guestNb     VARCHAR(10)     NOT NULL,
-    dateFrom    DATE            NOT NULL,
-    dateTo      DATE            NULL,
-    PRIMARY KEY (nomScientifique, guestNb, roomNb, dateFrom),
-    FOREIGN KEY (guestNb) REFERENCES HOTELDB.Guest(guestNb)
-    ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY (nomScientifique, roomNb) REFERENCES HOTELDB.Room (nomScientifique, roomNb)
-    ON DELETE NO ACTION ON UPDATE CASCADE,
-    CONSTRAINT date CHECK (dateTo >= dateFrom),
-    CONSTRAINT dateFrom CHECK (dateFrom >= current_date)
+CREATE TABLE Amateur (
+    idobservateur VARCHAR(10) PRIMARY KEY,
+    scorefiabilite INT,
+    nomcommunaute VARCHAR(255) NOT NULL,
+    FOREIGN KEY (nomcommunaute) REFERENCES Communaute(nomcommunaute),
+    FOREIGN KEY (idobservateur) REFERENCES Observateur(idobservateur)
 );
 
-ALTER TABLE HOTELDB.Guest ALTER gender DROP DEFAULT;
+CREATE TABLE Professionnel (
+    idobservateur VARCHAR(10) PRIMARY KEY,
+    numerolicense VARCHAR(15),
+    FOREIGN KEY (idobservateur) REFERENCES Observateur(idobservateur)
+);
+
+CREATE TABLE Expertise (
+    champsexpertise VARCHAR(255),
+    nomcommunaute VARCHAR(255),
+    PRIMARY KEY (champsexpertise, nomcommunaute),
+    FOREIGN KEY (nomcommunaute) REFERENCES Communaute(nomcommunaute)
+);
+
+CREATE TABLE Especeoiseau (
+    nomscientifique VARCHAR(255) PRIMARY KEY,
+    nomcommun VARCHAR(255),
+    statutspeces VARCHAR(255),
+    nomscientifiquecomsommer VARCHAR(255), -- nom scientifique du prédateur de l'espèce courante
+    FOREIGN KEY (nomscientifiquecomsommer) REFERENCES Especeoiseau(nomscientifique)
+);
+
+CREATE TABLE Observation (
+    idobservation VARCHAR(10) PRIMARY KEY,
+    notes TEXT,
+    dateobs DATE,
+    idrapport VARCHAR(10) NOT NULL,
+    idobservateur VARCHAR(10) NOT NULL,
+    nomscientifique VARCHAR(255) NOT NULL,
+    FOREIGN KEY (idrapport) REFERENCES Rapport(idrapport),
+    FOREIGN KEY (idobservateur) REFERENCES Observateur(idobservateur),
+    FOREIGN KEY (nomscientifique) REFERENCES Especeoiseau(nomscientifique)
+);
+
+CREATE TABLE Zonegeographique (
+    nomzone VARCHAR(255) PRIMARY KEY,
+    descriptionzone TEXT,
+    latitude DECIMAL(10, 8),
+    longitude DECIMAL(11, 8)
+);
+
+CREATE TABLE Resider (
+    nomscientifique VARCHAR(255),
+    nomzone VARCHAR(255),
+    nbindividus INT NOT NULL,
+    PRIMARY KEY (nomscientifique, nomzone),
+    FOREIGN KEY (nomscientifique) REFERENCES Especeoiseau(nomscientifique),
+    FOREIGN KEY (nomzone) REFERENCES Zonegeographique(nomzone)
+);
+
