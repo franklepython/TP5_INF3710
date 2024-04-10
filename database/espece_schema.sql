@@ -8,5 +8,5 @@ CREATE TABLE Especeoiseau (
     nomcommun VARCHAR(255),
     statutspeces VARCHAR(255),
     nomscientifiquecomsommer VARCHAR(255), -- nom scientifique du prédateur de l'espèce courante
-    FOREIGN KEY (nomscientifiquecomsommer) REFERENCES Especeoiseauoiseau(nomscientifique)
+    FOREIGN KEY (nomscientifiquecomsommer) REFERENCES Especeoiseau(nomscientifique)
 );
