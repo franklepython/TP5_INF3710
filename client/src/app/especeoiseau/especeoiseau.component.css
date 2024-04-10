@@ -2,7 +2,7 @@
   background-color: #e2e2e2;
   font-family: "Roboto", sans-serif;
   text-align: center;
-  padding: 3%;
+  padding: 1%;
 }
 
 #ht {
@@ -13,7 +13,7 @@
 .divider {
   border-bottom: 1px solid var(--theme-green);
   margin: auto;
-  width: 50%;
+  width: 75%;
   margin-bottom: 25px;
 }
 
@@ -28,7 +28,7 @@
 
 .table-hover tbody tr:hover td,
 .table-hover tbody tr:hover th {
-  background-color: var(--theme-green-hover);
+  background-color: lightgreen;
 }
 
 .btn {
@@ -67,7 +67,7 @@
 .deletebtn {
   border-radius: 4px;
   color: white;
-  background-color: var(--theme-green);
+  background-color: lightcoral;
   border-style: none;
 }
 
