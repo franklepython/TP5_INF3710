@@ -14,7 +14,8 @@
       <th class="contentCell">Nom Scientifique</th>
       <th class="contentCell">Nom Commun</th>
       <th class="contentCell">Statutspeces de l'espèce</th>
-      <th class="actionCell">Prédateur</th>
+      <th class="contentCell">Prédateur</th>
+      <th class="actionCell"></th>
     </thead>
     <tbody>
       <tr *ngFor="let especeoiseau of especeoiseaux; let i = index">
@@ -33,6 +34,13 @@
         >
           {{ especeoiseau.statutspeces }}
         </td>
+        <td
+        class="contentCell"
+        contenteditable="true"
+        (blur)="changeEspeceoiseauStatutspeces($event, i)"
+      >
+        {{ especeoiseau.statutspeces }}
+      </td>
         <td class="actionCell">
           <button
             type="button"

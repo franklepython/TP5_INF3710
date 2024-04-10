@@ -12,17 +12,19 @@
 </nav>
 
 <div class="home" *ngIf="route == ''">
-  <p>
-    Entrez
-    <br />
-    pour
-    <br />
-  </p>
+  <div class="text-middle">
+    <p>
+      Entrez
+      <br />
+      pour
+      <br />
+    </p>
 
-  <p class="Ornithologie">découvrir l'ornithologie</p>
-  <button type="button" class="btn" routerLink="/especeoiseaux">
-    Entrez 🦆
-  </button>
+    <p class="Ornithologie">découvrir l'ornithologie</p>
+    <button type="button" class="btn" routerLink="/especeoiseaux">
+      Entrez 🦆
+    </button>
+  </div>
 </div>
 
 <router-outlet></router-outlet>

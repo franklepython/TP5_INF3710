@@ -1,35 +1,45 @@
-#hts{
-    margin-top: 10px;
-    margin-bottom: 10px;
+#hts {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-#ht{
-    margin-top: 20px;
+#ht {
+  margin-top: 20px;
 }
+
 .title {
-    color: var(--theme-green);
-    font-family: 'Roboto', sans-serif;
+  color: var(--theme-green);
+  font-family: "Roboto", sans-serif;
 }
 
 .home {
-    width: 100%;
-    background-color: var(--theme-background);
-    font-family: 'Roboto', sans-serif;
+  width: 100%;
+  height: 100%;
+  background-image: url("./canard.png");
+  background-size: cover;
+  background-position: center;
+  font-family: "Roboto", sans-serif;
+  position: absolute;
+  font-size: 60px;
+  text-align: center;
+}
+
+.text-middle {
     position: absolute;
+    width: 100%;
     top: 50%;
-    transform: translateY(-50%);
-    font-size: 60px;
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
 }
 
 .btn {
-    background-color: var(--theme-green);
-    font-size: 20px;
-    color: white;
-    box-shadow: 2px 2px 5px grey ;
-    font-family: 'Roboto', sans-serif;
-    padding: 10px;
-    padding-right: 20px;
-    padding-left: 20px;
-
+  background-color: var(--theme-green);
+  font-size: 20px;
+  color: white;
+  box-shadow: 2px 2px 5px grey;
+  font-family: "Roboto", sans-serif;
+  padding: 10px;
+  padding-right: 20px;
+  padding-left: 20px;
 }
