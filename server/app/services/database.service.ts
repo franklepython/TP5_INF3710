@@ -18,9 +18,7 @@ export class DatabaseService {
   public pool: pg.Pool = new pg.Pool(this.connectionConfig);
 
   // ======= DEBUG =======
-  public async getAllFromTable(
-    tableName: string
-  ): Promise<pg.QueryResult> {
+  public async getAllFromTable(tableName: string): Promise<pg.QueryResult> {
     const client = await this.pool.connect();
     const res = await client.query(
       `SELECT * FROM ornithologue_bd.${tableName};`
@@ -42,13 +40,20 @@ export class DatabaseService {
     )
       throw new Error("Invalid create especeoiseau values");
 
-    const values: string[] = [
+    const values: any[] = [
       especeoiseau.nomscientifique,
       especeoiseau.nomcommun,
       especeoiseau.statutspeces,
     ];
-    const queryText: string = `INSERT INTO ornithologue_bd.Especeoiseau VALUES($1, $2, $3);`;
 
+    let queryText: string;
+
+    if (especeoiseau.nomscientifiquecomsommer) {
+      values.push(especeoiseau.nomscientifiquecomsommer);
+      queryText = `INSERT INTO ornithologue_bd.Especeoiseau(nomscientifique, nomcommun, statutspeces, nomscientifiquecomsommer) VALUES($1, $2, $3, $4);`;
+    } else {
+      queryText = `INSERT INTO ornithologue_bd.Especeoiseau(nomscientifique, nomcommun, statutspeces) VALUES($1, $2, $3);`;
+    }
     const res = await client.query(queryText, values);
     client.release();
     return res;
@@ -58,7 +63,8 @@ export class DatabaseService {
   public async filterEspeceoiseaus(
     nomscientifique: string,
     especeoiseauNomcommun: string,
-    statutspeces: string
+    statutspeces: string,
+    nomscientifiquecomsommer?: string
   ): Promise<pg.QueryResult> {
     const client = await this.pool.connect();
 
@@ -69,6 +75,7 @@ export class DatabaseService {
       searchTerms.push(`nomcommun = '${especeoiseauNomcommun}'`);
     if (statutspeces.length > 0)
       searchTerms.push(`statutspeces = '${statutspeces}'`);
+    if (nomscientifiquecomsommer) searchTerms.push(`nomscientifiquecomsommer = '${nomscientifiquecomsommer}'`);
 
     let queryText = "SELECT * FROM ornithologue_bd.Especeoiseau";
     if (searchTerms.length > 0)
@@ -126,6 +133,14 @@ export class DatabaseService {
     const client = await this.pool.connect();
     const query = `DELETE FROM ornithologue_bd.Especeoiseau WHERE nomscientifique = '${nomscientifique}';`;
 
+    const res = await client.query(query);
+    client.release();
+    return res;
+  }
+
+  public async getPreyForPredator(nomscientifique: string): Promise<pg.QueryResult> {
+    const client = await this.pool.connect();
+    const query = `SELECT * FROM ornithologue_bd.Especeoiseau WHERE nomscientifiquecomsommer = '${nomscientifique}';`;
     const res = await client.query(query);
     client.release();
     return res;

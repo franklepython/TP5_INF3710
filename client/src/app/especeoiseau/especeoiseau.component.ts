@@ -12,6 +12,7 @@ export class EspeceoiseauComponent {
   @ViewChild("newEspeceoiseauNomcommun") newEspeceoiseauNomcommun: ElementRef;
   @ViewChild("newEspeceoiseauStatutspeces")
   newEspeceoiseauStatutspeces: ElementRef;
+  @ViewChild("newNomscientifiquecomsommer") newNomscientifiquecomsommer: ElementRef;
 
   public especeoiseaux: Especeoiseau[] = [];
   public duplicateError: boolean = false;
@@ -35,6 +36,7 @@ export class EspeceoiseauComponent {
       nomscientifique: this.newNomscientifique.nativeElement.innerText,
       nomcommun: this.newEspeceoiseauNomcommun.nativeElement.innerText,
       statutspeces: this.newEspeceoiseauStatutspeces.nativeElement.innerText,
+      nomscientifiquecomsommer: this.newNomscientifiquecomsommer.nativeElement.innerText || null,
     };
 
     this.communicationService
@@ -53,6 +55,7 @@ export class EspeceoiseauComponent {
     this.newNomscientifique.nativeElement.innerText = "";
     this.newEspeceoiseauNomcommun.nativeElement.innerText = "";
     this.newEspeceoiseauStatutspeces.nativeElement.innerText = "";
+    this.newNomscientifiquecomsommer.nativeElement.innerText = "";
   }
 
   public deleteEspeceoiseau(nomscientifique: string) {
@@ -71,6 +74,11 @@ export class EspeceoiseauComponent {
   public changeEspeceoiseauStatutspeces(event: any, i: number) {
     const editField = event.target.textContent;
     this.especeoiseaux[i].statutspeces = editField;
+  }
+
+  public changeNomscientifiquecomsommer(event: any, i: number) {
+    const editField = event.target.textContent;
+    this.especeoiseaux[i].nomscientifiquecomsommer = editField;
   }
 
   public updateEspeceoiseau(i: number) {

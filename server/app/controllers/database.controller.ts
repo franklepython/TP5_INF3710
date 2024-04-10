@@ -31,12 +31,14 @@ export class DatabaseController {
         var especeoiseauStatutspeces = req.params.statutspeces
           ? req.params.statutspeces
           : "";
+          var nomscientifiquecomsommer = req.query.nomscientifiquecomsommer ? req.query.nomscientifiquecomsommer.toString() : "";
 
         this.databaseService
           .filterEspeceoiseaus(
             nomscientifique,
             especeoiseauNomcommun,
-            especeoiseauStatutspeces
+            especeoiseauStatutspeces,
+            nomscientifiquecomsommer
           )
           .then((result: pg.QueryResult) => {
             const especeoiseaux: Especeoiseau[] = result.rows.map(
@@ -44,6 +46,7 @@ export class DatabaseController {
                 nomscientifique: especeoiseau.nomscientifique,
                 nomcommun: especeoiseau.nomcommun,
                 statutspeces: especeoiseau.statutspeces,
+                nomscientifiquecomsommer: especeoiseau.nomscientifiquecomsommer  
               })
             );
             res.json(especeoiseaux);
@@ -82,6 +85,7 @@ export class DatabaseController {
           nomscientifique: req.body.nomscientifique,
           nomcommun: req.body.nomcommun,
           statutspeces: req.body.statutspeces,
+          nomscientifiquecomsommer: req.body.nomscientifiquecomsommer || null,
         };
 
         this.databaseService
@@ -118,6 +122,7 @@ export class DatabaseController {
           nomscientifique: req.body.nomscientifique,
           nomcommun: req.body.nomcommun ? req.body.nomcommun : "",
           statutspeces: req.body.statutspeces ? req.body.statutspeces : "",
+          nomscientifiquecomsommer: req.body.nomscientifiquecomsommer || null,
         };
 
         this.databaseService

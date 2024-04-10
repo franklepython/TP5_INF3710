@@ -37,9 +37,9 @@
         <td
         class="contentCell"
         contenteditable="true"
-        (blur)="changeEspeceoiseauStatutspeces($event, i)"
+        (blur)="changeNomscientifiquecomsommer($event, i)"
       >
-        {{ especeoiseau.statutspeces }}
+      {{ especeoiseau.nomscientifiquecomsommer || 'NULL' }}
       </td>
         <td class="actionCell">
           <button
@@ -83,7 +83,7 @@
           class="contentCell"
           contenteditable="true"
           placeholder="Nouveau Prédateur"
-          #newEspeceoiseauPred
+          #newNomscientifiquecomsommer
         ></td>
       </tr>
     </tbody>
