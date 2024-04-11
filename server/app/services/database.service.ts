@@ -48,11 +48,21 @@ export class DatabaseService {
 
     let queryText: string;
 
-    if (especeoiseau.nomscientifiquecomsommer) {
-      values.push(especeoiseau.nomscientifiquecomsommer);
-      queryText = `INSERT INTO ornithologue_bd.Especeoiseau(nomscientifique, nomcommun, statutspeces, nomscientifiquecomsommer) VALUES($1, $2, $3, $4);`;
-    } else {
+    if (
+      especeoiseau.nomscientifiquecomsommer === null ||
+      especeoiseau.nomscientifiquecomsommer === "NULL"
+    ) {
+      console.log(" === null");
       queryText = `INSERT INTO ornithologue_bd.Especeoiseau(nomscientifique, nomcommun, statutspeces) VALUES($1, $2, $3);`;
+    } else {
+      const query = await this.getPossiblePredator(
+        especeoiseau.nomscientifiquecomsommer
+      );
+      if (query.rows.length > 0) {
+        queryText = `INSERT INTO ornithologue_bd.Especeoiseau(nomscientifique, nomcommun, statutspeces, nomscientifiquecomsommer) VALUES($1, $2, $3, $4);`;
+      } else {
+        throw new Error("Le prédateur spécifié n'existe pas.");
+      }
     }
     const res = await client.query(queryText, values);
     client.release();
@@ -108,18 +118,43 @@ export class DatabaseService {
 
     let toUpdateValues = [];
 
-    if (especeoiseau.nomcommun.length > 0)
+    if (especeoiseau.nomcommun.length > 0) {
       toUpdateValues.push(`nomcommun = '${especeoiseau.nomcommun}'`);
-    if (especeoiseau.statutspeces.length > 0)
-      toUpdateValues.push(`statutspeces = '${especeoiseau.statutspeces}'`);
+    } else {
+      throw new Error("Le nom commun de l'espece est vide");
+    }
 
+    if (especeoiseau.statutspeces.length > 0) {
+      toUpdateValues.push(`statutspeces = '${especeoiseau.statutspeces}'`);
+    } else {
+      throw new Error("Le statut de l'espece est vide");
+    }
+    if (
+      especeoiseau.nomscientifiquecomsommer === null ||
+      especeoiseau.nomscientifiquecomsommer === "NULL"
+    ) {
+      toUpdateValues.push(`nomscientifiquecomsommer = NULL`);
+    } else {
+      console.log(especeoiseau.nomscientifiquecomsommer);
+      const query = await this.getPossiblePredator(
+        especeoiseau.nomscientifiquecomsommer
+      );
+
+      if (query.rows.length > 0) {
+        toUpdateValues.push(
+          `nomscientifiquecomsommer = '${especeoiseau.nomscientifiquecomsommer}'`
+        );
+      } else {
+        throw new Error("Le prédateur spécifié n'existe pas.");
+      }
+    }
     if (
       !especeoiseau.nomscientifique ||
       especeoiseau.nomscientifique.length === 0 ||
       toUpdateValues.length === 0
-    )
+    ) {
       throw new Error("Invalid especeoiseau update query");
-
+    }
     const query = `UPDATE ornithologue_bd.Especeoiseau SET ${toUpdateValues.join(
       ", "
     )} WHERE nomscientifique = '${especeoiseau.nomscientifique}';`;
@@ -142,6 +177,16 @@ export class DatabaseService {
   }
 
   public async getPreyForPredator(
+    nomscientifique: string
+  ): Promise<pg.QueryResult> {
+    const client = await this.pool.connect();
+    const query = `SELECT * FROM ornithologue_bd.Especeoiseau WHERE nomscientifiquecomsommer = '${nomscientifique}';`;
+    const res = await client.query(query);
+    client.release();
+    return res;
+  }
+
+  public async getPossiblePredator(
     nomscientifique: string
   ): Promise<pg.QueryResult> {
     const client = await this.pool.connect();

@@ -99,6 +99,19 @@ export class EspeceoiseauComponent {
           if (existeDeja) {
             erreur = erreur.concat(", le nom scientifique est deja utiliser");
           }
+          const isValidEspece = this.especeoiseaux.some(
+            (espece) =>
+              espece.nomscientifique ===
+              especeoiseau.nomscientifiquecomsommer
+          );
+          const isConsommer: boolean = !(
+            especeoiseau.nomscientifiquecomsommer ===
+            null
+          );
+
+          if (!isValidEspece && isConsommer) {
+            erreur = erreur.concat(", Le predateur est invalide");
+          }
 
           if (erreur === "Attention!") {
             erreur = erreur.concat(", le serveur a echouer");
@@ -126,8 +139,7 @@ export class EspeceoiseauComponent {
           this.refresh();
         } else {
           const isPredator = this.especeoiseaux.some(
-            (espece) =>
-              espece.nomscientifiquecomsommer === nomscientifique
+            (espece) => espece.nomscientifiquecomsommer === nomscientifique
           );
 
           if (isPredator) {
@@ -172,23 +184,47 @@ export class EspeceoiseauComponent {
       .updateEspeceoiseau(this.especeoiseaux[i])
       .subscribe({
         next: (res: number) => {
-         if (res>0) {
-        this.notificationService.showBanner(
-          new NotificationContent(
-            "Modification faite avec succes!",
-            NotificationType.Success,
-            4000
-          )
-        );
-        this.refresh();
-      } if (res===-1) {
-      this.notificationService.showBanner(
-      new NotificationContent(
-        "Erreur serveur lors de la modification de l'espèce.",
-        NotificationType.Error,
-        4000
-      )
-    );
-      }}}
-  )};
+          if (res > 0) {
+            this.notificationService.showBanner(
+              new NotificationContent(
+                "Modification faite avec succes!",
+                NotificationType.Success,
+                4000
+              )
+            );
+            this.refresh();
+          }
+          if (res === -1) {
+            let erreur: string = "Attention!";
+
+            if (this.especeoiseaux[i].nomcommun === "") {
+              erreur = erreur.concat(", nomcommun est vide");
+            }
+            if (this.especeoiseaux[i].statutspeces === "") {
+              erreur = erreur.concat(", statut est vide");
+            }
+
+            const isValidEspece = this.especeoiseaux.some(
+              (espece) =>
+                espece.nomscientifique ===
+                this.especeoiseaux[i].nomscientifiquecomsommer
+            );
+            const isConsommer: boolean = !(
+              this.especeoiseaux[i].nomscientifiquecomsommer ===
+              null
+            );
+
+            if (!isValidEspece && isConsommer) {
+              erreur = erreur.concat(", Le predateur est invalide");
+            }
+            if (erreur === "Attention!") {
+              erreur = erreur.concat(", le serveur a echouer");
+            }
+            this.notificationService.showBanner(
+              new NotificationContent(erreur, NotificationType.Error, 4000)
+            );
+          }
+        },
+      });
   }
+}
