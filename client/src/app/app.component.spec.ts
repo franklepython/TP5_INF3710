@@ -4,6 +4,8 @@ import { HttpClientModule } from "@angular/common/http";
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { AppComponent } from "./app.component";
 import { CommunicationService } from "./communication.service";
+import { NotificationService } from "./notifications/notification.service";
+import { NotificationBannerComponent } from "./notificationBanner/notification-banner/notification-banner.component";
 
 describe("AppComponent", () => {
   beforeEach(async(() => {
@@ -12,7 +14,7 @@ describe("AppComponent", () => {
         AppComponent,
       ],
       imports: [HttpClientModule],
-      providers: [CommunicationService],
+      providers: [CommunicationService, NotificationService, NotificationBannerComponent],
     }).compileComponents();
   }));
 

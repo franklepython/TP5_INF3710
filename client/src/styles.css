@@ -7,7 +7,7 @@
 :root {
   --theme-green: #0b6623;
   --theme-green-hover: #08400b;
-  --theme-green-placeholder: #3F704D;
+  --theme-green-placeholder: #3f704d;
   --theme-blue: #6e9eeb;
   --theme-blue-hover: #6e9eeb33;
   --theme-blue-placeholder: #6e9eebbb;
@@ -23,4 +23,15 @@
 
 html {
   background-color: #e2e2e2;
+}
+.notification-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  z-index: 1000;
 }

@@ -7,9 +7,11 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { CommunicationService } from "./communication.service";
 import { EspeceoiseauComponent } from "./especeoiseau/especeoiseau.component";
+import { NotificationService } from "./notifications/notification.service";
+import { NotificationBannerComponent } from './notificationBanner/notification-banner/notification-banner.component';
 
 @NgModule({
-  declarations: [AppComponent, EspeceoiseauComponent],
+  declarations: [AppComponent, EspeceoiseauComponent, NotificationBannerComponent],
   imports: [
     CommonModule,
     BrowserModule,
@@ -17,7 +19,7 @@ import { EspeceoiseauComponent } from "./especeoiseau/especeoiseau.component";
     FormsModule,
     AppRoutingModule,
   ],
-  providers: [CommunicationService],
+  providers: [CommunicationService, NotificationService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -75,7 +75,10 @@ export class DatabaseService {
       searchTerms.push(`nomcommun = '${especeoiseauNomcommun}'`);
     if (statutspeces.length > 0)
       searchTerms.push(`statutspeces = '${statutspeces}'`);
-    if (nomscientifiquecomsommer) searchTerms.push(`nomscientifiquecomsommer = '${nomscientifiquecomsommer}'`);
+    if (nomscientifiquecomsommer)
+      searchTerms.push(
+        `nomscientifiquecomsommer = '${nomscientifiquecomsommer}'`
+      );
 
     let queryText = "SELECT * FROM ornithologue_bd.Especeoiseau";
     if (searchTerms.length > 0)
@@ -138,7 +141,9 @@ export class DatabaseService {
     return res;
   }
 
-  public async getPreyForPredator(nomscientifique: string): Promise<pg.QueryResult> {
+  public async getPreyForPredator(
+    nomscientifique: string
+  ): Promise<pg.QueryResult> {
     const client = await this.pool.connect();
     const query = `SELECT * FROM ornithologue_bd.Especeoiseau WHERE nomscientifiquecomsommer = '${nomscientifique}';`;
     const res = await client.query(query);

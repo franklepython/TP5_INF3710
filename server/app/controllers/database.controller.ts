@@ -31,7 +31,9 @@ export class DatabaseController {
         var especeoiseauStatutspeces = req.params.statutspeces
           ? req.params.statutspeces
           : "";
-          var nomscientifiquecomsommer = req.query.nomscientifiquecomsommer ? req.query.nomscientifiquecomsommer.toString() : "";
+        var nomscientifiquecomsommer = req.query.nomscientifiquecomsommer
+          ? req.query.nomscientifiquecomsommer.toString()
+          : "";
 
         this.databaseService
           .filterEspeceoiseaus(
@@ -46,7 +48,7 @@ export class DatabaseController {
                 nomscientifique: especeoiseau.nomscientifique,
                 nomcommun: especeoiseau.nomcommun,
                 statutspeces: especeoiseau.statutspeces,
-                nomscientifiquecomsommer: especeoiseau.nomscientifiquecomsommer  
+                nomscientifiquecomsommer: especeoiseau.nomscientifiquecomsommer,
               })
             );
             res.json(especeoiseaux);
@@ -111,6 +113,7 @@ export class DatabaseController {
           })
           .catch((e: Error) => {
             console.error(e.stack);
+            res.json(-1);
           });
       }
     );

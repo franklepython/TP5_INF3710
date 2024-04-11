@@ -21,5 +21,5 @@ export class AppComponent implements OnInit {
     }
 
     public readonly title: string = "INF3710 TP5";
-    public ngOnInit(): void { }
+    public     ngOnInit(): void {}
 }
