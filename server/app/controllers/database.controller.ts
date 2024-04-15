@@ -68,7 +68,6 @@ export class DatabaseController {
             const especeoiseauxNbsNomcommuns = result.rows.map(
               (especeoiseau: EspeceoiseauPK) => ({
                 nomscientifique: especeoiseau.nomscientifique,
-                nomcommun: especeoiseau.nomcommun,
               })
             );
             res.json(especeoiseauxNbsNomcommuns);

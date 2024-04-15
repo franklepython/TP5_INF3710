@@ -22,6 +22,7 @@ export class EspeceoiseauComponent {
 
   public especeoiseaux: Especeoiseau[] = [];
   public duplicateError: boolean = false;
+  public availablePredators: Especeoiseau[] = [];
 
   public constructor(
     private communicationService: CommunicationService,
@@ -30,6 +31,7 @@ export class EspeceoiseauComponent {
 
   public ngOnInit(): void {
     this.getEspeceoiseaus();
+    this.getAvailablePredators();
   }
 
   public getEspeceoiseaus(): void {
@@ -86,12 +88,6 @@ export class EspeceoiseauComponent {
           if (especeoiseau.nomscientifique === "") {
             erreur = erreur.concat(", nomscientifique est vide");
           }
-          if (especeoiseau.nomcommun === "") {
-            erreur = erreur.concat(", nomcommun est vide");
-          }
-          if (especeoiseau.statutspeces === "") {
-            erreur = erreur.concat(", statut est vide");
-          }
 
           const existeDeja: boolean = this.especeoiseaux.some(
             (e) => e.nomscientifique === especeoiseau.nomscientifique
@@ -101,12 +97,10 @@ export class EspeceoiseauComponent {
           }
           const isValidEspece = this.especeoiseaux.some(
             (espece) =>
-              espece.nomscientifique ===
-              especeoiseau.nomscientifiquecomsommer
+              espece.nomscientifique === especeoiseau.nomscientifiquecomsommer
           );
           const isConsommer: boolean = !(
-            especeoiseau.nomscientifiquecomsommer ===
-            null
+            especeoiseau.nomscientifiquecomsommer === null
           );
 
           if (!isValidEspece && isConsommer) {
@@ -210,8 +204,7 @@ export class EspeceoiseauComponent {
                 this.especeoiseaux[i].nomscientifiquecomsommer
             );
             const isConsommer: boolean = !(
-              this.especeoiseaux[i].nomscientifiquecomsommer ===
-              null
+              this.especeoiseaux[i].nomscientifiquecomsommer === null
             );
 
             if (!isValidEspece && isConsommer) {
@@ -225,6 +218,14 @@ export class EspeceoiseauComponent {
             );
           }
         },
+      });
+  }
+
+  private getAvailablePredators(): void {
+    this.communicationService
+      .getEspeceoiseauPKs()
+      .subscribe((predators: Especeoiseau[]) => {
+        this.availablePredators = predators;
       });
   }
 }

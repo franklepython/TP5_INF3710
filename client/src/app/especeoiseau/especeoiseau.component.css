@@ -22,8 +22,27 @@
   color: var(--theme-green);
 }
 
+.header .contentCell {
+  font-size: 18px;
+  color: var(--theme-green);
+  border: 3px solid green;
+}
+.header .actionCell {
+  border-bottom: 3px solid green;
+  border-left: 3px solid green;
+  border-top: 0cm solid transparent;
+  border-right: 0cm solid transparent;
+}
+
 .contentCell {
   padding: 10px;
+  border-top: 2px solid darkgreen;
+  border-left: 3px solid green;
+  border-right: 3px solid green;
+}
+.contentCell select {
+  border-top: 0cm solid transparent;
+  border-right: 0cm solid transparent;
 }
 
 .table-hover tbody tr:hover td,
@@ -51,17 +70,29 @@
   content: "";
 }
 
+.blank_row .contentCell {
+  border: 3px solid green;
+}
+
+.blank_row .actionCell {
+  border-top: 3px solid green;
+  border-right: 0cm solid transparent;
+}
+
 .blank_row {
   color: var(--theme-green);
 }
 
 .blank_row:not(.nohover):hover {
-  color: #e2e2e2;
+  color: black;
 }
 
 .actionCell {
+  width: fit-content;
   padding: 10px;
-  color: var(--theme-green);
+  border-top: 2px solid darkgreen;
+  border-left: 3px solid green;
+  border-right: 3px solid green;
 }
 
 .deletebtn {
