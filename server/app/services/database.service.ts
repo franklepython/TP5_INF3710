@@ -33,26 +33,25 @@ export class DatabaseService {
   ): Promise<pg.QueryResult> {
     const client = await this.pool.connect();
 
-    if (
-      !especeoiseau.nomscientifique ||
-      !especeoiseau.nomcommun ||
-      !especeoiseau.statutspeces
-    )
+    if (!especeoiseau.nomscientifique)
       throw new Error("Invalid create especeoiseau values");
 
-    const values: any[] = [
-      especeoiseau.nomscientifique,
-      especeoiseau.nomcommun,
-      especeoiseau.statutspeces,
-    ];
+    let values: any[] = [especeoiseau.nomscientifique];
+    if (especeoiseau.nomcommun !== null) {
+      values.push(`nomcommun = '${especeoiseau.nomcommun}'`);
+    } else {
+      values.push(`NULL`);
+    }
+
+    if (especeoiseau.statutspeces !== null) {
+      values.push(`statutspeces = '${especeoiseau.statutspeces}'`);
+    } else {
+      values.push(`NULL`);
+    }
 
     let queryText: string;
 
-    if (
-      especeoiseau.nomscientifiquecomsommer === null ||
-      especeoiseau.nomscientifiquecomsommer === "NULL"
-    ) {
-      console.log(" === null");
+    if (especeoiseau.nomscientifiquecomsommer === null) {
       queryText = `INSERT INTO ornithologue_bd.Especeoiseau(nomscientifique, nomcommun, statutspeces) VALUES($1, $2, $3);`;
     } else {
       const query = await this.getPossiblePredator(
@@ -118,21 +117,18 @@ export class DatabaseService {
 
     let toUpdateValues = [];
 
-    if (especeoiseau.nomcommun.length > 0) {
+    if (especeoiseau.nomcommun !== null) {
       toUpdateValues.push(`nomcommun = '${especeoiseau.nomcommun}'`);
     } else {
-      throw new Error("Le nom commun de l'espece est vide");
+      toUpdateValues.push(`nomcommun = NULL`);
     }
 
-    if (especeoiseau.statutspeces.length > 0) {
+    if (especeoiseau.statutspeces !== null) {
       toUpdateValues.push(`statutspeces = '${especeoiseau.statutspeces}'`);
     } else {
-      throw new Error("Le statut de l'espece est vide");
+      toUpdateValues.push(`statutspeces = NULL`);
     }
-    if (
-      especeoiseau.nomscientifiquecomsommer === null ||
-      especeoiseau.nomscientifiquecomsommer === "NULL"
-    ) {
+    if (especeoiseau.nomscientifiquecomsommer === null) {
       toUpdateValues.push(`nomscientifiquecomsommer = NULL`);
     } else {
       console.log(especeoiseau.nomscientifiquecomsommer);

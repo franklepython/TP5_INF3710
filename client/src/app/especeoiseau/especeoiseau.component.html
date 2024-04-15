@@ -23,14 +23,14 @@
           contenteditable="true"
           (blur)="changeEspeceoiseauNomcommun($event, i)"
         >
-          {{ especeoiseau.nomcommun }}
+          {{ especeoiseau.nomcommun || 'NULL' }}
         </td>
         <td
           class="contentCell"
           contenteditable="true"
           (blur)="changeEspeceoiseauStatutspeces($event, i)"
         >
-          {{ especeoiseau.statutspeces }}
+          {{ especeoiseau.statutspeces || 'NULL' }}
         </td>
         <td
         class="contentCell"

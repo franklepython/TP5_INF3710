@@ -65,57 +65,91 @@ export class EspeceoiseauComponent {
   public insertEspeceoiseau(): void {
     const especeoiseau: any = {
       nomscientifique: this.newNomscientifique.nativeElement.innerText,
-      nomcommun: this.newEspeceoiseauNomcommun.nativeElement.innerText,
-      statutspeces: this.newEspeceoiseauStatutspeces.nativeElement.innerText,
+      nomcommun: this.newEspeceoiseauNomcommun.nativeElement.innerText || null,
+      statutspeces: this.newEspeceoiseauStatutspeces.nativeElement.innerText || null,
       nomscientifiquecomsommer:
         this.newNomscientifiquecomsommer.nativeElement.innerText || null,
     };
+    if (especeoiseau.nomscientifiquecomsommer !== null) {
+      if (especeoiseau.nomscientifiquecomsommer!.trim() === "NULL" ||
+      especeoiseau.nomscientifiquecomsommer!.trim() === "") {
+        especeoiseau.nomscientifiquecomsommer = null;
+      }
+    }
+    if (this.isValidPredator(especeoiseau.nomscientifiquecomsommer!)) {
+      this.communicationService.insertEspeceoiseau(especeoiseau).subscribe({
+        next: (res: number) => {
+          if (res > 0) {
+            this.communicationService.filter("update");
+            this.notificationService.showBanner(
+              new NotificationContent(
+                especeoiseau.nomscientifique + "a ete ajoute",
+                NotificationType.Success,
+                4000
+              )
+            );
+            this.refresh();
+          } else if (res === -1) {
+            let erreur: string = "Attention!";
+            if (especeoiseau.nomscientifique === "") {
+              erreur = erreur.concat(", nomscientifique est vide");
+            }
 
-    this.communicationService.insertEspeceoiseau(especeoiseau).subscribe({
-      next: (res: number) => {
-        if (res > 0) {
-          this.communicationService.filter("update");
-          this.notificationService.showBanner(
-            new NotificationContent(
-              especeoiseau.nomscientifique + "a ete ajoute",
-              NotificationType.Success,
-              4000
-            )
-          );
-          this.refresh();
-        } else if (res === -1) {
-          let erreur: string = "Attention!";
-          if (especeoiseau.nomscientifique === "") {
-            erreur = erreur.concat(", nomscientifique est vide");
-          }
+            const existeDeja: boolean = this.especeoiseaux.some(
+              (e) => e.nomscientifique === especeoiseau.nomscientifique
+            );
+            if (existeDeja) {
+              erreur = erreur.concat(", le nom scientifique est deja utiliser");
+            }
+            const isValidEspece = this.especeoiseaux.some(
+              (espece) =>
+                espece.nomscientifique === especeoiseau.nomscientifiquecomsommer
+            );
+            const isConsommer: boolean = !(
+              especeoiseau.nomscientifiquecomsommer === null
+            );
 
-          const existeDeja: boolean = this.especeoiseaux.some(
-            (e) => e.nomscientifique === especeoiseau.nomscientifique
-          );
-          if (existeDeja) {
-            erreur = erreur.concat(", le nom scientifique est deja utiliser");
-          }
-          const isValidEspece = this.especeoiseaux.some(
-            (espece) =>
-              espece.nomscientifique === especeoiseau.nomscientifiquecomsommer
-          );
-          const isConsommer: boolean = !(
-            especeoiseau.nomscientifiquecomsommer === null
-          );
+            if (!isValidEspece && isConsommer) {
+              erreur = erreur.concat(", Le predateur est invalide");
+            }
 
-          if (!isValidEspece && isConsommer) {
-            erreur = erreur.concat(", Le predateur est invalide");
+            if (erreur === "Attention!") {
+              erreur = erreur.concat(", le serveur a echouer");
+            }
+            this.notificationService.showBanner(
+              new NotificationContent(erreur, NotificationType.Error, 4000)
+            );
           }
+        },
+      });
+    }
+  }
 
-          if (erreur === "Attention!") {
-            erreur = erreur.concat(", le serveur a echouer");
-          }
-          this.notificationService.showBanner(
-            new NotificationContent(erreur, NotificationType.Error, 4000)
-          );
-        }
-      },
-    });
+  public isValidPredator(nomscientifiquecomsommer: string | null): boolean {
+    if (nomscientifiquecomsommer === null) {
+      return true;
+    }
+    if (nomscientifiquecomsommer.trim() === "NULL") {
+      return true;
+    }
+    this.getAvailablePredators();
+    const isValidPred = this.especeoiseaux.some(
+      (espece) => espece.nomscientifique === nomscientifiquecomsommer
+    );
+    if (isValidPred) {
+      return true;
+    } else {
+      this.notificationService.showBanner(
+        new NotificationContent(
+          "Le prédateur " +
+            nomscientifiquecomsommer +
+            " ne fait pas parti des especes documentée",
+          NotificationType.Error,
+          4000
+        )
+      );
+      return false;
+    }
   }
 
   private refresh() {
@@ -174,51 +208,59 @@ export class EspeceoiseauComponent {
   }
 
   public updateEspeceoiseau(i: number) {
-    this.communicationService
-      .updateEspeceoiseau(this.especeoiseaux[i])
-      .subscribe({
-        next: (res: number) => {
-          if (res > 0) {
-            this.notificationService.showBanner(
-              new NotificationContent(
-                "Modification faite avec succes!",
-                NotificationType.Success,
-                4000
-              )
-            );
-            this.refresh();
-          }
-          if (res === -1) {
-            let erreur: string = "Attention!";
+    if (this.especeoiseaux[i].nomscientifiquecomsommer !== null) {
+      if (this.especeoiseaux[i].nomscientifiquecomsommer!.trim() === "NULL"
+      || this.especeoiseaux[i].nomscientifiquecomsommer!.trim() === "") {
+        this.especeoiseaux[i].nomscientifiquecomsommer = null;
+      }
+    }
+    if (this.isValidPredator(this.especeoiseaux[i].nomscientifiquecomsommer!)) {
+      this.communicationService
+        .updateEspeceoiseau(this.especeoiseaux[i])
+        .subscribe({
+          next: (res: number) => {
+            if (res > 0) {
+              this.notificationService.showBanner(
+                new NotificationContent(
+                  "Modification faite avec succes!",
+                  NotificationType.Success,
+                  4000
+                )
+              );
+              this.refresh();
+            }
+            if (res === -1) {
+              let erreur: string = "Attention!";
 
-            if (this.especeoiseaux[i].nomcommun === "") {
-              erreur = erreur.concat(", nomcommun est vide");
-            }
-            if (this.especeoiseaux[i].statutspeces === "") {
-              erreur = erreur.concat(", statut est vide");
-            }
+              if (this.especeoiseaux[i].nomcommun === "") {
+                erreur = erreur.concat(", nomcommun est vide");
+              }
+              if (this.especeoiseaux[i].statutspeces === "") {
+                erreur = erreur.concat(", statut est vide");
+              }
 
-            const isValidEspece = this.especeoiseaux.some(
-              (espece) =>
-                espece.nomscientifique ===
-                this.especeoiseaux[i].nomscientifiquecomsommer
-            );
-            const isConsommer: boolean = !(
-              this.especeoiseaux[i].nomscientifiquecomsommer === null
-            );
+              const isValidEspece = this.especeoiseaux.some(
+                (espece) =>
+                  espece.nomscientifique ===
+                  this.especeoiseaux[i].nomscientifiquecomsommer
+              );
+              const isConsommer: boolean = !(
+                this.especeoiseaux[i].nomscientifiquecomsommer === null
+              );
 
-            if (!isValidEspece && isConsommer) {
-              erreur = erreur.concat(", Le predateur est invalide");
+              if (!isValidEspece && isConsommer) {
+                erreur = erreur.concat(", Le predateur est invalide");
+              }
+              if (erreur === "Attention!") {
+                erreur = erreur.concat(", le serveur a echouer");
+              }
+              this.notificationService.showBanner(
+                new NotificationContent(erreur, NotificationType.Error, 4000)
+              );
             }
-            if (erreur === "Attention!") {
-              erreur = erreur.concat(", le serveur a echouer");
-            }
-            this.notificationService.showBanner(
-              new NotificationContent(erreur, NotificationType.Error, 4000)
-            );
-          }
-        },
-      });
+          },
+        });
+    }
   }
 
   private getAvailablePredators(): void {
