@@ -79,10 +79,6 @@
   border-right: 0cm solid transparent;
 }
 
-.blank_row {
-  color: var(--theme-green);
-}
-
 .blank_row:not(.nohover):hover {
   color: black;
 }

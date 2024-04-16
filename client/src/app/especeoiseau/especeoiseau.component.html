@@ -3,11 +3,7 @@
 
   <div class="divider"></div>
 
-  <table
-    id="ht"
-    width="100%"
-    class="table-striped table-hover"
-  >
+  <table id="ht" width="100%" class="table-striped table-hover">
     <thead class="header">
       <th class="contentCell">Nom Scientifique</th>
       <th class="contentCell">Nom Commun</th>
@@ -23,22 +19,22 @@
           contenteditable="true"
           (blur)="changeEspeceoiseauNomcommun($event, i)"
         >
-          {{ especeoiseau.nomcommun || 'NULL' }}
+          {{ especeoiseau.nomcommun || "NULL" }}
         </td>
         <td
           class="contentCell"
           contenteditable="true"
           (blur)="changeEspeceoiseauStatutspeces($event, i)"
         >
-          {{ especeoiseau.statutspeces || 'NULL' }}
+          {{ especeoiseau.statutspeces || "NULL" }}
         </td>
         <td
-        class="contentCell"
-        contenteditable="true"
-        (blur)="changeNomscientifiquecomsommer($event, i)"
-      >
-      {{ especeoiseau.nomscientifiquecomsommer || 'NULL' }}
-      </td>
+          class="contentCell"
+          contenteditable="true"
+          (blur)="changeNomscientifiquecomsommer($event, i)"
+        >
+          {{ especeoiseau.nomscientifiquecomsommer || "NULL" }}
+        </td>
         <td class="actionCell">
           <button
             type="button"
@@ -78,11 +74,11 @@
         ></td>
         <td
           class="contentCell"
-          class="contentCell"
           contenteditable="true"
           placeholder="Nouveau Prédateur"
           #newNomscientifiquecomsommer
         ></td>
+        <td class="actionCell" contenteditable="false"></td>
       </tr>
     </tbody>
   </table>

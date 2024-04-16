@@ -3,7 +3,7 @@
     top: 0;
     left: 0;
     right: 0;
-    background-color: #007bff;
+    background-color: var(--theme-green);
     color: white;
     padding: 10px;
     text-align: center;

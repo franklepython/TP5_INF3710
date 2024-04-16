@@ -14,12 +14,10 @@ export class NotificationService {
   }
 
   showBanner(content: NotificationContent) {
-    console.log("show banner est appeler avec "+ content.message);
     this.notificationSubject.next(content);
   }
 
   hideBanner() {
-    console.log("hide banner est appele");
     this.notificationSubject.next(null);
   }
 }

@@ -35,6 +35,13 @@ export class DatabaseService {
 
     if (!especeoiseau.nomscientifique)
       throw new Error("Invalid create especeoiseau values");
+    console.log("create");
+    const exists = await this.nomScientifiqueExists(
+      especeoiseau.nomscientifique
+    );
+    if (exists.rows.length>0) {
+      throw new Error("Nom scientifique already exists in the database.");
+    }
 
     let values: any[] = [especeoiseau.nomscientifique];
     if (especeoiseau.nomcommun !== null) {
@@ -187,6 +194,16 @@ export class DatabaseService {
   ): Promise<pg.QueryResult> {
     const client = await this.pool.connect();
     const query = `SELECT * FROM ornithologue_bd.Especeoiseau WHERE nomscientifiquecomsommer = '${nomscientifique}';`;
+    const res = await client.query(query);
+    client.release();
+    return res;
+  }
+  public async nomScientifiqueExists(
+    nomscientifique: string
+  ): Promise<pg.QueryResult> {
+    const client = await this.pool.connect();
+    console.log("nomscientifique existe deja check");
+    const query = `SELECT * FROM ornithologue_bd.Especeoiseau WHERE nomscientifique = '${nomscientifique}';`;
     const res = await client.query(query);
     client.release();
     return res;
