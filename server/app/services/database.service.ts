@@ -17,7 +17,7 @@ export class DatabaseService {
 
   public pool: pg.Pool = new pg.Pool(this.connectionConfig);
 
-  // ======= DEBUG =======
+  // ======= Get =======
   public async getAllFromTable(tableName: string): Promise<pg.QueryResult> {
     const client = await this.pool.connect();
     const res = await client.query(
@@ -27,7 +27,7 @@ export class DatabaseService {
     return res;
   }
 
-  // ======= HOTEL =======
+  // ======= Especeoiseau =======
   public async createEspeceoiseau(
     especeoiseau: Especeoiseau
   ): Promise<pg.QueryResult> {
@@ -36,22 +36,22 @@ export class DatabaseService {
     if (!especeoiseau.nomscientifique)
       throw new Error("Invalid create especeoiseau values");
     console.log("create");
-    const exists = await this.nomScientifiqueExists(
+    const exists = await this.getPossiblePredator(
       especeoiseau.nomscientifique
     );
-    if (exists.rows.length>0) {
+    if (exists.rows.length > 0) {
       throw new Error("Nom scientifique already exists in the database.");
     }
 
     let values: any[] = [especeoiseau.nomscientifique];
     if (especeoiseau.nomcommun !== null) {
-      values.push(`nomcommun = '${especeoiseau.nomcommun}'`);
+      values.push(especeoiseau.nomcommun);
     } else {
       values.push(`NULL`);
     }
 
     if (especeoiseau.statutspeces !== null) {
-      values.push(`statutspeces = '${especeoiseau.statutspeces}'`);
+      values.push(especeoiseau.statutspeces);
     } else {
       values.push(`NULL`);
     }
@@ -59,12 +59,17 @@ export class DatabaseService {
     let queryText: string;
 
     if (especeoiseau.nomscientifiquecomsommer === null) {
+      console.log("pas de prédateur");
       queryText = `INSERT INTO ornithologue_bd.Especeoiseau(nomscientifique, nomcommun, statutspeces) VALUES($1, $2, $3);`;
     } else {
       const query = await this.getPossiblePredator(
         especeoiseau.nomscientifiquecomsommer
       );
       if (query.rows.length > 0) {
+        console.log("ajout avec prédateur");
+        values.push(
+          especeoiseau.nomscientifiquecomsommer
+        );
         queryText = `INSERT INTO ornithologue_bd.Especeoiseau(nomscientifique, nomcommun, statutspeces, nomscientifiquecomsommer) VALUES($1, $2, $3, $4);`;
       } else {
         throw new Error("Le prédateur spécifié n'existe pas.");
@@ -110,7 +115,7 @@ export class DatabaseService {
   public async getEspeceoiseauNomcommunsByNos(): Promise<pg.QueryResult> {
     const client = await this.pool.connect();
     const res = await client.query(
-      "SELECT nomscientifique, nomcommun FROM ornithologue_bd.Especeoiseau;"
+      "SELECT nomscientifique FROM ornithologue_bd.Especeoiseau;"
     );
     client.release();
     return res;
@@ -193,16 +198,6 @@ export class DatabaseService {
     nomscientifique: string
   ): Promise<pg.QueryResult> {
     const client = await this.pool.connect();
-    const query = `SELECT * FROM ornithologue_bd.Especeoiseau WHERE nomscientifiquecomsommer = '${nomscientifique}';`;
-    const res = await client.query(query);
-    client.release();
-    return res;
-  }
-  public async nomScientifiqueExists(
-    nomscientifique: string
-  ): Promise<pg.QueryResult> {
-    const client = await this.pool.connect();
-    console.log("nomscientifique existe deja check");
     const query = `SELECT * FROM ornithologue_bd.Especeoiseau WHERE nomscientifique = '${nomscientifique}';`;
     const res = await client.query(query);
     client.release();
